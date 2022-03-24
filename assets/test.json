@@ -1,0 +1,16 @@
+{
+    "procesos": [
+        {
+            "expediente":1,
+            "status": "active"
+        },
+        {
+            "expediente":2,
+            "status": "active"
+        },
+        {
+            "expediente":3,
+            "status": "archived"
+        }
+    ]
+}
