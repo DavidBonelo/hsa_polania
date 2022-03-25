@@ -2,6 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hsa_polania/widgets/add_user_test.dart';
+import 'package:hsa_polania/widgets/home_grid.dart';
+import 'package:hsa_polania/widgets/home_table.dart';
+import 'package:hsa_polania/widgets/read_user.dart';
+
+import '../widgets/home_data_table.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,19 +20,24 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text('test'),
-              _buildTable(),
-              ElevatedButton(
-                onPressed: () async {
-                  final jsonString =
-                      await rootBundle.loadString('assets/test.json');
-                  final a = jsonDecode(jsonString);
-                  print(a);
+              AddUser('xdd', 'aaaa', 21),
+              GetUserName('asdfgh'),
+              const Text('test'),
+              FutureBuilder(
+                future: getData(),
+                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                  if (snapshot.hasData) {
+                    print(snapshot.data!);
+                    // return HomeGrid(data: snapshot.data!);
+                    return HomeDataTable(data: snapshot.data!);
+                  } else {
+                    return CircularProgressIndicator();
+                  }
                 },
-                child: Icon(Icons.open_in_browser),
-              )
+              ),
             ],
           ),
         ),
@@ -34,28 +45,16 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildTable() {
-    return GridView(
-      padding: const EdgeInsets.all(8.0),
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4, childAspectRatio: 5.0),
-      children: [
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-        Text('testt'),
-      ],
-    );
+  // Widget _buildTable() {
+  //   return
+  // }
+
+  Future<List> getData() async {
+    final jsonString = await rootBundle.loadString('assets/test.json');
+    // final a = json.decode(jsonString);
+    final a = jsonDecode(jsonString);
+    print(a);
+    final List ee = a['processes'];
+    return ee;
   }
 }
