@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hsa_polania/models/process_model.dart';
+import 'package:hsa_polania/pages/process_page.dart';
 
 class HomeDataTable extends StatelessWidget {
   const HomeDataTable({Key? key, required this.data}) : super(key: key);
@@ -7,6 +9,31 @@ class HomeDataTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final testDataRows = [
+    //   DataRow(
+    //     onSelectChanged: (_) {
+    //       goToProcess(testProcess, context);
+    //     },
+    //     cells: testProcess.getDataCells(),
+    //   ),
+    // ];
+    final testDataRows = testProcessList.map((element) {
+      return DataRow(
+        onSelectChanged: (_) {
+          goToProcess(element, context);
+          print(element.lastUpdate);
+        },
+        cells: element.getDataCells(),
+        color: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) {
+          // return Theme.of(context).colorScheme.primary.withOpacity(0.08);
+          // return Colors.green; // Use the default value.
+          return getSemaforoColor(element.semaforo); // Use the default value.
+        }),
+      );
+    }).toList();
+
+    //
     final tableColumns = data[0]
         .keys
         .map<DataColumn>(
@@ -25,7 +52,16 @@ class HomeDataTable extends StatelessWidget {
               )))
           .toList();
       return DataRow(
-          onSelectChanged: (_) {},
+          onSelectChanged: (_) {
+// need ne id here somehow
+            Navigator.push<void>(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => ProcessPage(
+                    processId: '69420',
+                  ),
+                ));
+          },
           // decoration: getStatusColor(rowItems[1].child.data),
           cells: rowItems,
           color: MaterialStateProperty.resolveWith<Color?>(
@@ -42,8 +78,8 @@ class HomeDataTable extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-          columns: tableColumns,
-          rows: tableItems,
+          columns: columnLabels,
+          rows: testDataRows,
           border: TableBorder.all(borderRadius: BorderRadius.circular(8.0)),
           // children: [TableRowInkWell()], // doesn't work
           sortAscending: true,
@@ -54,16 +90,26 @@ class HomeDataTable extends StatelessWidget {
       ),
     );
   }
+
+  goToProcess(Process process, BuildContext context) {
+    Navigator.push<void>(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => ProcessPage(
+            processId: process.expediente,
+          ),
+        ));
+  }
 }
 
-Color? getStatusColor(String? status) {
+Color? getSemaforoColor(String? status) {
   switch (status) {
-    case 'active':
+    case 'green':
       // return const BoxDecoration(color: Colors.green);
-      return Colors.green;
-    case 'archived':
+      return Colors.green.withOpacity(0.5);
+    case 'red':
       // return const BoxDecoration(color: Colors.orange);
-      return Colors.orange;
+      return Colors.red.withOpacity(0.5);
     default:
       return null;
   }
