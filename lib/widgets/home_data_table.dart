@@ -17,7 +17,9 @@ class HomeDataTable extends StatelessWidget {
     //     cells: testProcess.getDataCells(),
     //   ),
     // ];
-    final testDataRows = testProcessList.map((element) {
+
+    // final testDataRows = testProcessList.map((element) {
+    final testDataRows = data.map((element) {
       return DataRow(
         onSelectChanged: (_) {
           goToProcess(element, context);
@@ -34,51 +36,51 @@ class HomeDataTable extends StatelessWidget {
     }).toList();
 
     //
-    final tableColumns = data[0]
-        .keys
-        .map<DataColumn>(
-          (e) => DataColumn(
-              label: Text(
-            e.toString(),
-            // textAlign: TextAlign.center,
-          )),
-        )
-        .toList();
-    final tableItems = data.map<DataRow>((e) {
-      final List<DataCell> rowItems = e.values
-          .map<DataCell>((e) => DataCell(Text(
-                e.toString(),
-                // textAlign: TextAlign.center,
-              )))
-          .toList();
-      return DataRow(
-          onSelectChanged: (_) {
-// need ne id here somehow
-            Navigator.push<void>(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => ProcessPage(
-                    processId: '69420',
-                  ),
-                ));
-          },
-          // decoration: getStatusColor(rowItems[1].child.data),
-          cells: rowItems,
-          color: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-            if (states.contains(MaterialState.selected)) return Colors.orange;
-            // return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-            // return Colors.green; // Use the default value.
-            return null; // Use the default value.
-          }));
-    }).toList();
+//     final tableColumns = data[0]
+//         .keys
+//         .map<DataColumn>(
+//           (e) => DataColumn(
+//               label: Text(
+//             e.toString(),
+//             // textAlign: TextAlign.center,
+//           )),
+//         )
+//         .toList();
+//     final tableItems = data.map<DataRow>((e) {
+//       final List<DataCell> rowItems = e.values
+//           .map<DataCell>((e) => DataCell(Text(
+//                 e.toString(),
+//                 // textAlign: TextAlign.center,
+//               )))
+//           .toList();
+//       return DataRow(
+//           onSelectChanged: (_) {
+// // need ne id here somehow
+//             Navigator.push<void>(
+//                 context,
+//                 MaterialPageRoute<void>(
+//                   builder: (context) => ProcessPage(
+//                     processId: '69420',
+//                   ),
+//                 ));
+//           },
+//           // decoration: getStatusColor(rowItems[1].child.data),
+//           cells: rowItems,
+//           color: MaterialStateProperty.resolveWith<Color?>(
+//               (Set<MaterialState> states) {
+//             if (states.contains(MaterialState.selected)) return Colors.orange;
+//             // return Theme.of(context).colorScheme.primary.withOpacity(0.08);
+//             // return Colors.green; // Use the default value.
+//             return null; // Use the default value.
+//           }));
+//     }).toList();
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-          columns: columnLabels,
+          columns: dataColumns,
           rows: testDataRows,
           border: TableBorder.all(borderRadius: BorderRadius.circular(8.0)),
           // children: [TableRowInkWell()], // doesn't work
@@ -96,7 +98,7 @@ class HomeDataTable extends StatelessWidget {
         context,
         MaterialPageRoute<void>(
           builder: (context) => ProcessPage(
-            processId: process.expediente,
+            process: process,
           ),
         ));
   }

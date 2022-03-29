@@ -1,4 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+Process processFromMap(Map<String, dynamic> data) {
+  return Process(
+    data['expediente'],
+    data['status'],
+    data['subject'],
+    data['asesor'],
+    data['lastUpdate'].toDate(), // converts Timestamp to DateTime
+  );
+}
 
 class Process {
   final String expediente;
@@ -38,8 +49,15 @@ class Process {
   }
 }
 
-const columnLabels = [
-  DataColumn(label: Text('Expediente')),
+final columnLabels = [
+  'Expediente',
+  'Estado',
+  'Asunto',
+  'Asesor',
+  'Última modificación'
+];
+final dataColumns = [
+  DataColumn(label: Text('Expediente'), onSort: (_, __) {}),
   DataColumn(label: Text('Estado')),
   DataColumn(label: Text('Asunto')),
   DataColumn(label: Text('Asesor')),

@@ -1,21 +1,52 @@
 import 'package:flutter/material.dart';
 
-class ProcessPage extends StatelessWidget {
-  const ProcessPage({Key? key, required this.processId}) : super(key: key);
+import '../models/process_model.dart';
 
-  final String processId;
+class ProcessPage extends StatelessWidget {
+  const ProcessPage({Key? key, required this.process}) : super(key: key);
+
+  final Process process;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Proceso $processId'),
+        title: Text('Proceso ${process.expediente}'),
       ),
       body: Center(
-        child: SingleChildScrollView(
-          child: Text('Detalles del proceso $processId'),
-        ),
+        // child: SingleChildScrollView(
+        child: ProcessDetails(process: process),
+        // ),
       ),
+    );
+  }
+}
+
+class ProcessDetails extends StatelessWidget {
+  const ProcessDetails({
+    Key? key,
+    required this.process,
+  }) : super(key: key);
+
+  final Process process;
+
+  @override
+  Widget build(BuildContext context) {
+    final details = process.getDetailsObject() as Map<String, dynamic>;
+    final itemsList = [
+      Text('Expediente: ${process.expediente}', textAlign: TextAlign.center)
+    ];
+
+    return ListView.separated(
+      shrinkWrap: true,
+      itemBuilder: (_, i) {
+        return Text(
+          '${columnLabels[i + 1]}: ${details.values.toList()[i]}',
+          textAlign: TextAlign.center,
+        );
+      },
+      separatorBuilder: (_, __) => const Divider(),
+      itemCount: details.length, // + expediente
     );
   }
 }

@@ -21,7 +21,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final db = ref.watch(firebaseProvider);
+    final db = ref.read(firebaseProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,17 +38,18 @@ class HomePage extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // AddUser('xdd', 'aaaa', 21),
-              // GetUserName('asdfgh'),
               const Text('test'),
               FutureBuilder(
-                future: getData(),
-                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                future: db.getProcesses(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Process>> snapshot) {
                   if (snapshot.hasData) {
                     // print(snapshot.data!);
-                    // return HomeGrid(data: snapshot.data!);
+                    print('has data ${snapshot.connectionState}');
                     return HomeDataTable(data: snapshot.data!);
                   } else {
+                    print('donesn\'t has data ${snapshot.connectionState}');
+                    print(snapshot.error);
                     return const Center(child: CircularProgressIndicator());
                   }
                 },
@@ -61,10 +62,6 @@ class HomePage extends ConsumerWidget {
           FloatingActionButton(onPressed: () {}, child: const Icon(Icons.add)),
     );
   }
-
-  // Widget _buildTable() {
-  //   return
-  // }
 
   Future<List> getData() async {
     final jsonString = await rootBundle.loadString('assets/test.json');

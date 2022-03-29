@@ -10,19 +10,30 @@ class FirebaseDB {
   final CollectionReference _processes =
       FirebaseFirestore.instance.collection('processes');
 
-  getProcesses() async {
+  Future<List<Process>> getProcesses() async {
     // final data = await _processes.doc('123').get();
     // print(data.data());
     // print(data.id);
     final data = await _processes.get();
+
+    // for (var element in data.docs) {
+    //   print(element.id);
+    // }
+
+    final List<Process> processList = [];
     // print(data.docs);
     for (var dato in data.docs) {
-      print(dato.id);
-      print(dato.data());
+      final data = dato.data() as Map<String, dynamic>;
+      data.addAll({'expediente': dato.id});
+      processList.add(processFromMap(data));
+      // print(dato.id);
+      // print(dato.data());
     }
     // print(data);
     // final object = data.data() as Map<String, dynamic>;
     // return Text("Full Name: ${data['full_name']} ${data['last_name']}");
+    // print(processList);
+    return processList;
   }
 
   addProcess(Process process) async {
