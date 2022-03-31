@@ -49,7 +49,7 @@ class HomePage extends ConsumerWidget {
                     return HomeDataTable(data: snapshot.data!);
                   } else {
                     print('donesn\'t has data ${snapshot.connectionState}');
-                    print(snapshot.error);
+                    print('error: ${snapshot.error}');
                     return const Center(child: CircularProgressIndicator());
                   }
                 },

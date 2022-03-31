@@ -24,6 +24,17 @@ class FirebaseDB {
     // print(data.docs);
     for (var dato in data.docs) {
       final data = dato.data() as Map<String, dynamic>;
+      var actuationsQuery = await dato.reference
+          .collection('modificaciones')
+          .orderBy('fecha')
+          // .limitToLast(1)
+          .get();
+      final actuationsList = actuationsQuery.docs;
+      for (var actuation in actuationsList) {
+        print(actuation.data());
+      }
+      // if (actuationsList.isNotEmpty) print(actuationsList.last.data());
+      // print(actuationsList.isNotEmpty ? actuationsList.last.data() : null);
       data.addAll({'expediente': dato.id});
       processList.add(processFromMap(data));
       // print(dato.id);
@@ -40,4 +51,6 @@ class FirebaseDB {
     _processes.doc(process.expediente).set(process.getDetailsObject());
     // _processes.add({'gg': 1});
   }
+
+  Object? getActuations() {}
 }
