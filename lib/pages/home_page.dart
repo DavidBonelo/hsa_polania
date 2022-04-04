@@ -28,7 +28,8 @@ class HomePage extends ConsumerWidget {
         title: const Text('HSA Despacho Polania'),
         actions: [
           IconButton(
-            onPressed: () => db.getProcesses(),
+            // onPressed: () => db.getProcesses(),
+            onPressed: () => db.uploadProcesses(),
             icon: const Icon(Icons.sync),
           )
         ],
