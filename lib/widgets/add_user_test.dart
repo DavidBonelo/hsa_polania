@@ -1,3 +1,5 @@
+// ignore_for_file: type=lint, unused_import
+
 import 'package:flutter/material.dart';
 
 // Import the firebase_core and cloud_firestore plugin

@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Process processFromMap(Map<String, dynamic> data) {
   return Process(
@@ -7,7 +7,7 @@ Process processFromMap(Map<String, dynamic> data) {
     data['status'],
     data['subject'],
     data['asesor'],
-    data['lastUpdate'].toDate(), // converts Timestamp to DateTime
+    data['lastUpdate']?.toDate(), // converts Timestamp to DateTime
   );
 }
 
@@ -16,30 +16,53 @@ class Process {
   final String status;
   final String subject;
   final String asesor;
-  final DateTime lastUpdate;
-  final String semaforo;
+  final DateTime? lastUpdate;
+  late final String semaforo; // trafic light
 
   Process(
       this.expediente, this.status, this.subject, this.asesor, this.lastUpdate)
-      : semaforo = lastUpdate.difference(DateTime.now()).inDays < -15
-            ? 'red'
-            : 'green';
-  //            {
-  //   print(lastUpdate.difference(DateTime.now()).inDays);
-  // }
+  //     : semaforo = lastUpdate.difference(DateTime.now()).inDays < -15
+  //           ? 'orange'
+  //           : 'green';
+  {
+    // if (lastUpdate != null) {
+
+    final totalDaysSinceUpdate = lastUpdate?.difference(DateTime.now()).inDays;
+    // }
+
+    if (status == 'Archived' || status == 'Trasladado') {
+      semaforo = 'grey';
+    } else if (totalDaysSinceUpdate != null) {
+      if (totalDaysSinceUpdate < -30) {
+        semaforo = 'red';
+      } else if (totalDaysSinceUpdate < -15) {
+        semaforo = 'orange';
+      } else {
+        semaforo = 'green';
+      }
+    } else {
+      semaforo = 'white';
+    }
+  }
 
   List<DataCell> getDataCells() {
+    final detailsCells = getDetailsMap().values.map((e) {
+      e = e is DateTime ? DateFormat('dd-MM-yyyy').format(e) : e;
+      return DataCell(Container(
+          constraints: const BoxConstraints(maxWidth: 300.0),
+          child: Text(
+            e.toString(),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+          )));
+    }).toList();
     return [
-      DataCell(Text(expediente)),
-      DataCell(Text(status)),
-      DataCell(Text(subject)),
-      DataCell(Text(asesor)),
-      DataCell(Text(lastUpdate.toString())),
+      DataCell(Text(expediente)), ...detailsCells
       // DataCell(Text(semaforo)),
     ];
   }
 
-  Object getDetailsObject() {
+  Map<String, dynamic> getDetailsMap() {
     return {
       'status': status,
       'subject': subject,
@@ -54,51 +77,10 @@ final columnLabels = [
   'Estado',
   'Asunto',
   'Asesor',
-  'Última modificación'
-];
-final dataColumns = [
-  DataColumn(label: Text('Expediente'), onSort: (_, __) {}),
-  DataColumn(label: Text('Estado')),
-  DataColumn(label: Text('Asunto')),
-  DataColumn(label: Text('Asesor')),
-  DataColumn(label: Text('Última modificación')),
-  // DataColumn(label: Text('semaforo')),
+  'Última actuación'
 ];
 
-Process testProcess = Process(
-  '123',
-  'Active',
-  'subject asdf',
-  'Maria',
-  DateTime.now(),
-);
-List<Process> testProcessList = [
-  Process(
-    '123',
-    'Active',
-    'subject asdf',
-    'Maria',
-    DateTime.now(),
-  ),
-  Process(
-    '1234',
-    'Archived',
-    'subject afdssdf',
-    'Shane',
-    DateTime.now().subtract(const Duration(days: 20)),
-  ),
-  Process(
-    '123asfd4',
-    'Archived',
-    'subjeafsdct afdssdf',
-    'Shaneaa',
-    DateTime.now().subtract(const Duration(days: 30)),
-  ),
-  Process(
-    'aasfd4',
-    'Active',
-    'subjea',
-    'me',
-    DateTime.now().subtract(const Duration(days: 4)),
-  ),
-];
+final List<DataColumn> dataColumns = columnLabels
+    .map<DataColumn>(
+        (e) => DataColumn(label: Text(e, maxLines: 2), onSort: (_, __) {}))
+    .toList();

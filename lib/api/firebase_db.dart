@@ -1,12 +1,19 @@
 import 'dart:convert';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as http;
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hsa_polania/models/process_model.dart';
+
 // import 'package:flutter/material.dart';
+
+final firebaseProvider = Provider<FirebaseDB>((ref) {
+  return FirebaseDB();
+});
 
 class FirebaseDB {
   // final String documentId;
@@ -21,6 +28,7 @@ class FirebaseDB {
     // print(data.data());
     // print(data.id);
     final data = await _processes.get();
+    // final data = await _processes.orderBy('lastUpdate').get(); // removes rows without date field x.x
 
     // for (var element in data.docs) {
     //   print(element.id);
@@ -54,11 +62,11 @@ class FirebaseDB {
   }
 
   addProcess(Process process) async {
-    _processes.doc(process.expediente).set(process.getDetailsObject());
+    _processes.doc(process.expediente).set(process.getDetailsMap());
     // _processes.add({'gg': 1});
   }
 
-  Object? getActuations() {}
+  // Object? getActuations() {}
 
   uploadProcesses() async {
     final CollectionReference _activeProcesses =

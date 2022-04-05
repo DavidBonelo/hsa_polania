@@ -1,3 +1,4 @@
+// ignore_for_file: type=lint
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

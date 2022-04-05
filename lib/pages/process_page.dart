@@ -32,7 +32,7 @@ class ProcessDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final details = process.getDetailsObject() as Map<String, dynamic>;
+    final details = process.getDetailsMap();
     final itemsList = [
       Text('Expediente: ${process.expediente}', textAlign: TextAlign.center)
     ];

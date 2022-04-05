@@ -37,7 +37,7 @@ class HomeTable extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Table(
-          defaultColumnWidth: FixedColumnWidth(200),
+          defaultColumnWidth: const FixedColumnWidth(200),
           // defaultColumnWidth: FlexColumnWidth(),
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           border: TableBorder.all(),

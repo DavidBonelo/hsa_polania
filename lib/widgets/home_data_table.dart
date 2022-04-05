@@ -5,7 +5,7 @@ import 'package:hsa_polania/pages/process_page.dart';
 class HomeDataTable extends StatelessWidget {
   const HomeDataTable({Key? key, required this.data}) : super(key: key);
 
-  final List data;
+  final List<Process> data;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +82,7 @@ class HomeDataTable extends StatelessWidget {
         child: DataTable(
           columns: dataColumns,
           rows: testDataRows,
+
           border: TableBorder.all(borderRadius: BorderRadius.circular(8.0)),
           // children: [TableRowInkWell()], // doesn't work
           sortAscending: true,
@@ -112,6 +113,10 @@ Color? getSemaforoColor(String? status) {
     case 'red':
       // return const BoxDecoration(color: Colors.orange);
       return Colors.red.withOpacity(0.5);
+    case 'orange':
+      return Colors.orange.withOpacity(0.5);
+    case 'grey':
+      return Colors.grey.withOpacity(0.5);
     default:
       return null;
   }
